@@ -6,7 +6,7 @@ public class Shoot : MonoBehaviour
     public GameObject bulletPrefab; // Reference to the bullet prefab
     public Transform bulletSpawnPoint; // Reference to the bullet spawn point
 
-    public float bulletSpeed = 10f; // Speed of the bullet
+    public float bulletSpeed = 20f; // Speed of the bullet
     public float shootCooldown = 0.1f; // Cooldown in seconds between shots
 
     private float lastShootTime = -100f; // Initialize to a low value
@@ -30,6 +30,7 @@ public class Shoot : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > lastShootTime + shootCooldown)
         {
             Fire();
+            FireEffects();
         }
     }
 
@@ -50,5 +51,13 @@ public class Shoot : MonoBehaviour
 
         // Update the last shoot time to enforce cooldown
         lastShootTime = Time.time;
+    }
+
+    private void FireEffects(){
+        //TODO - add a muzzle flash effect when shooting?? - some other time
+
+        //TODO - add a camera shake effect when shooting
+        FeedbackEventManager.ShakeCamera(2f, 1f, 0.25f);
+
     }
 }

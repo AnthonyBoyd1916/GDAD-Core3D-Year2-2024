@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using DG.Tweening;
+using UnityEditor;
+
 public class Enemy : MonoBehaviour, IDamagable
 {
     public EnemyData enemyData; // Reference to the EnemyData ScriptableObject
@@ -26,6 +29,14 @@ public class Enemy : MonoBehaviour, IDamagable
     {
         mat = GetComponent<Renderer>().material;
         originalColor = mat.color;
+    }
+    
+    private void OnEnable()
+    {
+        // TODO - add an animation event to play the spawn animation tween
+        //scale the enemy up from 0 to 1 in 1 second using DOTween
+        transform.localScale = Vector3.zero;
+        transform.DOScale(Vector3.one, 1f).SetEase(Ease.OutBounce);
     }
 
     // Method to handle taking damage (from player or other sources)
@@ -55,6 +66,10 @@ public class Enemy : MonoBehaviour, IDamagable
             Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
         }
 
+        //TODO - add and audio feedback when the enemy dies
+
+        AudioEventManager.PlaySFX(null, "Explosion Flesh", 1.0f, 1.0f, true, 0.1f, 0f);
+
         // Optional: add death logic, like spawning loot or playing an animation
         Destroy(gameObject);
 
@@ -71,6 +86,10 @@ public class Enemy : MonoBehaviour, IDamagable
         Material mat = GetComponent<Renderer>().material;
         mat.color = Color.red;
         Invoke("ResetMaterial", 0.1f);
+
+        //TODO - add an audio feedback when the enemy is hit
+
+        AudioEventManager.PlaySFX(this.transform, "Flesh Hit", 1.0f, 1.0f, true, 0.1f, 0f);
     }
 
     private void ResetMaterial()
