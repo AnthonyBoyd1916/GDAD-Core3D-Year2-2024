@@ -3,14 +3,19 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEditor;
 
-public class Enemy : MonoBehaviour, IDamagable
+public class Enemy : EnemyBase, IDamagable
 {
     public EnemyData enemyData; // Reference to the EnemyData ScriptableObject
     public GameObject dieEffectPrefab; // Reference to the die effect prefab
+
+    private IEnemyState currentState;
+
     public int damage = 10; // Damage dealt by the enemy
-
     private int health = 10;
+    public float chaseRange = 5f;
+    public float speed = 2f;
 
+    public Transform target;
     private Material mat;
     private Color originalColor;
 
@@ -29,18 +34,23 @@ public class Enemy : MonoBehaviour, IDamagable
     {
         mat = GetComponent<Renderer>().material;
         originalColor = mat.color;
+        SetState(new EnemyState_Idle());
+        Invoke("LocatePlayer", 1f);
     }
-    
+
+    public override void Move() { }
+
     private void OnEnable()
     {
         // TODO - add an animation event to play the spawn animation tween
         //scale the enemy up from 0 to 1 in 1 second using DOTween
         transform.localScale = Vector3.zero;
         transform.DOScale(Vector3.one, 1f).SetEase(Ease.OutBounce);
+        
     }
 
     // Method to handle taking damage (from player or other sources)
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
         health -= damage;
 
@@ -58,17 +68,16 @@ public class Enemy : MonoBehaviour, IDamagable
         }
     }
 
-    private void Die()
+    public override void Die()
     {
         // Instantiate die effect and apply area damage
         if (dieEffectPrefab != null)
         {
             Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
         }
-
+        
         //TODO - add and audio feedback when the enemy dies
-
-        AudioEventManager.PlaySFX(null, "Explosion Flesh", 1.0f, 1.0f, true, 0.1f, 0f);
+        //AudioEventManager.PlaySFX(null, "Explosion Flesh",  1.0f, 1.0f, true, 0.1f, 0f);
 
         // Optional: add death logic, like spawning loot or playing an animation
         Destroy(gameObject);
@@ -86,10 +95,9 @@ public class Enemy : MonoBehaviour, IDamagable
         Material mat = GetComponent<Renderer>().material;
         mat.color = Color.red;
         Invoke("ResetMaterial", 0.1f);
-
+        
         //TODO - add an audio feedback when the enemy is hit
-
-        AudioEventManager.PlaySFX(this.transform, "Flesh Hit", 1.0f, 1.0f, true, 0.1f, 0f);
+        //AudioEventManager.PlaySFX(this.transform, "Flesh Hit",  1.0f, 1.0f, true, 0.1f, 0f);
     }
 
     private void ResetMaterial()
@@ -108,6 +116,25 @@ public class Enemy : MonoBehaviour, IDamagable
             // Call TakeDamage on the object, dealing the enemy's damage amount
             damagableObject.TakeDamage(damage);
             Debug.Log($"{gameObject.name} dealt {damage} damage to {collision.gameObject.name}.");
+        }
+    }
+
+    public void SetState(IEnemyState newState)
+    {
+        currentState?.Exit(this);
+        currentState = newState;
+        currentState?.Enter(this);
+    }
+    public string GetCurrentStateName()
+    {
+        return currentState != null ? currentState.GetType().Name.Replace("Enemy", "") : "No State";
+    }
+
+    private void LocatePlayer()
+    {
+        if (target == null)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
         }
     }
 }

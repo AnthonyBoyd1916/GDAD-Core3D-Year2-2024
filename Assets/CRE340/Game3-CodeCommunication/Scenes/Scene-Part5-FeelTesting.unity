@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 189863285}
   - component: {fileID: 189863287}
   - component: {fileID: 189863288}
+  - component: {fileID: 189863289}
   m_Layer: 0
   m_Name: Spawn
   m_TagString: Untagged
@@ -382,13 +383,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPrefabs:
   - {fileID: 5153894257583250854, guid: 065a19eb99dc43c4e92587f8bc142f46, type: 3}
-  - {fileID: 4293011047966659804, guid: b9ae169f53b86fe46b65b34e07985ebd, type: 3}
-  - {fileID: 3558379014972084002, guid: 754a144ea8d54764c8c7888e18b0156b, type: 3}
   spawnArea: {x: 22, y: 0, z: 22}
   startDelay: 2
-  minSpawnInterval: 0.5
-  maxSpawnInterval: 2
-  maxSpawnedObjects: 100
+  minSpawnInterval: 2
+  maxSpawnInterval: 4
+  maxSpawnedObjects: 50
   spawnedObjects: []
 --- !u!4 &189863286
 Transform:
@@ -441,6 +440,26 @@ MonoBehaviour:
   maxSpawnInterval: 20
   maxSpawnedObjects: 8
   spawnedObjects: []
+--- !u!114 &189863289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189863284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6771f370410d12c42b800ac65828b340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyTypes:
+  - {fileID: 11400000, guid: 16c7590885f0fcf479df9d7f69ddbd61, type: 2}
+  - {fileID: 11400000, guid: 99c209bf67f8d1f488724bed53e21e1b, type: 2}
+  spawnArea: {x: 20, y: 0, z: 20}
+  startDelay: 2
+  minSpawnInterval: 0.5
+  maxSpawnInterval: 3
+  maxSpawnedObjects: 100
 --- !u!1 &223660204
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,7 +1410,7 @@ MonoBehaviour:
   m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
+  m_SoftShadowQuality: 3
 --- !u!1 &418530104
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,11 +1640,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
-      propertyPath: orthographic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f,
-        type: 3}
       propertyPath: field of view
       value: 50
       objectReference: {fileID: 0}
@@ -1722,11 +1736,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8944336655422409498, guid: f6d148d888ffbf54b9afe9936dfaec1f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 489383736}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
 --- !u!1 &488295149
 GameObject:
@@ -1863,56 +1873,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488295149}
   m_CullTransparentMesh: 1
---- !u!1 &489383731 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8944336655422409498, guid: f6d148d888ffbf54b9afe9936dfaec1f,
-    type: 3}
-  m_PrefabInstance: {fileID: 471478129}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &489383736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489383731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_Version: 2
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
 --- !u!1001 &535464076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4373,7 +4333,7 @@ MonoBehaviour:
   eventName: Custom BGM Event Name
   musicTrackNumber: 0
   musicTrackName: Synthpop Martini Main
-  playOnEnabled: 0
+  playOnEnabled: 1
   loopBGM: 1
   volume: 0.6
   fadeType: 0

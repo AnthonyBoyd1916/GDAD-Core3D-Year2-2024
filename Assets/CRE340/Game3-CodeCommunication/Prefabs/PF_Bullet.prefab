@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6854733854813930392}
   - component: {fileID: 5969629346026480172}
   - component: {fileID: 2323885144468907713}
-  - component: {fileID: 2089624852169155833}
+  - component: {fileID: 756070346506040310}
   m_Layer: 0
   m_Name: PF_Bullet
   m_TagString: Untagged
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df72e368757f93247a27e49da61236b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 30
+  damage: 10
 --- !u!114 &2323885144468907713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,11 +165,11 @@ MonoBehaviour:
   destroyAfterTime: 1
   destructionTime: 8
   destroyOnCollision: 1
-  collisionDestroyThreshold: 1
-  destroyOffScreen: 1
+  collisionDestroyThreshold: 2
+  destroyOffScreen: 0
   destroyIfIdle: 0
   idleTimeThreshold: 1
---- !u!82 &2089624852169155833
+--- !u!82 &756070346506040310
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,7 +180,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7842468050713168027, guid: 3c08029f3a334d8468cd0ea11728e603,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 995d7ae97e34cc84c9db0e555aa49388, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9808f6c0021e8c9498b2dffdc7d8f7ec, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -282,7 +282,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &38903073719687304
 Transform:
   m_ObjectHideFlags: 0

@@ -13,17 +13,18 @@ using UnityEngine.Serialization;
 ///     
 /// </summary>
 
-public class AudioEventSender_BGM : MonoBehaviour
+public class AudioEventSender_BGM : MonoBehaviour, IAudioEventSender
 {
     [Space(20)]
     ///  USE THIS TO DETERMINE WHICH EVENT TO SEND (Mutiple scripts can be attached to the same object)
     /// Loop through the AudioEventSender_BGM scripts on the object and send the event with the matching eventName
-    public string eventName = "Custom BGM Event Name";
+    public string eventName = "Custom BGM Event Name"; //for future use
 
     
     [Space(10)]
     [Header("Background Music Event Parameters (BGM)")]
     [Space(20)]
+    [Tooltip("The track number of the music to play - used if no name is given -1 to ignore")]
     public int musicTrackNumber = 0; // WILL USE THE TRACK NUMBER IF NO NAME IS GIVEN
     public string musicTrackName = "TRACK NAME HERE"; //IF NO NAME IS GIVEN, THE TRACK NUMBER WILL BE USED
     
@@ -35,12 +36,17 @@ public class AudioEventSender_BGM : MonoBehaviour
     [Range(0,1f)]
     public float volume = 0.8f;
     public FadeType fadeType = FadeType.FadeInOut;
-    [Range(0,5f)]
+    [Range(0,10f)]
     public float fadeDuration = 1.5f;
     
-    [Space(10)]
+    [Space(10)] 
     [Range(0,5f)]
     public float eventDelay = 0f;
+    
+    [Header("Collider Settings")]
+    public CollisionType collisionType = CollisionType.Trigger;
+    public string targetTag = "Player";
+    public bool stopOnExit = true;
     
     [Space(20)]
     [Header("TestMode : 'M' to play music, 'N' to stop, 'B' to pause")]
@@ -60,8 +66,25 @@ public class AudioEventSender_BGM : MonoBehaviour
     }
 
     private void OnDisable(){
-        if (AudioManager.Instance.isActiveAndEnabled){
+        if (AudioManager.Instance != null && AudioManager.Instance.isActiveAndEnabled)
+        {
             Stop();
+        }
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (collisionType == CollisionType.Trigger && other.CompareTag(targetTag))
+        {
+            Play();
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collisionType == CollisionType.Collision && collision.collider.CompareTag(targetTag))
+        {
+            Play();
         }
     }
 
@@ -79,17 +102,37 @@ public class AudioEventSender_BGM : MonoBehaviour
     private void PlayBGM()
     {
         //send the PlayBGM Event with parameters from the inspector
-        AudioEventManager.PlayBGM(musicTrackNumber, musicTrackName, volume, fadeType, fadeDuration, loopBGM);
+        AudioEventManager.PlayBGM(musicTrackNumber, musicTrackName, volume, fadeType, fadeDuration, loopBGM, eventName);
     }
     
     private IEnumerator PlayBGM_Delayed(float delay)
     {
         yield return new WaitForSeconds(delay);
         //send the PlayBGM Event with parameters from the inspector
-        AudioEventManager.PlayBGM(musicTrackNumber, musicTrackName, volume, fadeType, fadeDuration, loopBGM);
+        AudioEventManager.PlayBGM(musicTrackNumber, musicTrackName, volume, fadeType, fadeDuration, loopBGM, eventName);
        
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (collisionType == CollisionType.Trigger && other.CompareTag(targetTag))
+        {
+            if(stopOnExit){
+                Stop();
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collisionType == CollisionType.Collision && collision.collider.CompareTag(targetTag))
+        {
+            if(stopOnExit){
+                Stop();
+            }
+        }
+    }
+    
     public void Stop(){
         if(eventDelay <= 0){
             StopBGM();
@@ -99,15 +142,35 @@ public class AudioEventSender_BGM : MonoBehaviour
             StartCoroutine(StopBGM_Delayed(eventDelay));
         }
     }
+
     private void StopBGM()
     {
-        //send the StopBGM Event with parameters from the inspector
-        AudioEventManager.StopBGM(fadeDuration);
+        if (AudioManager.Instance.isFadingMusic)
+        {
+            // Handle the stop request if the AudioManager is fading
+            StartCoroutine(WaitForFadeAndStop());
+        }
+        else
+        {
+            // Send the StopBGM Event with parameters from the inspector
+            AudioEventManager.StopBGM(fadeDuration);
+        }
     }
+
     private IEnumerator StopBGM_Delayed(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //send the StopBGM Event with parameters from the inspector
+        StopBGM();
+    }
+
+    private IEnumerator WaitForFadeAndStop()
+    {
+        // Wait until the AudioManager is no longer fading
+        while (AudioManager.Instance.isFadingMusic)
+        {
+            yield return null;
+        }
+        // Send the StopBGM Event with parameters from the inspector
         AudioEventManager.StopBGM(fadeDuration);
     }
     
